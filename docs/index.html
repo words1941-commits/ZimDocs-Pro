@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="manifest" href="./manifest.json" />
+  <link rel="icon" href="./icons/favicon-32.svg" />
+  <title>ZimDocs Pro</title>
+  <meta name="theme-color" content="#0d6efd"/>
+  <link rel="stylesheet" href="./static/css/ui.css" />
+</head>
+<body>
+  <div id="app" class="container">
+    <header class="header">
+      <h1>ZimDocs‑Pro</h1>
+      <p class="subtitle">Ready to Work Offline</p>
+    </header>
+
+    <main>
+      <section class="card">
+        <h2>Welcome</h2>
+        <p>This is your ZimDocs‑Pro PWA — built for GitHub Pages. It works offline after first load.</p>
+        <div class="row">
+          <input id="search" placeholder="Search docs..." />
+          <button id="newNote">New Note</button>
+        </div>
+      </section>
+
+      <section class="card" id="notesSection">
+        <h3>Your Notes</h3>
+        <div id="notesList"></div>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <small>© ZimDocs-Pro — Offline PWA</small>
+    </footer>
+  </div>
+
+  <script src="./static/js/main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js').catch(e => console.log('SW failed', e));
+    }
+  </script>
+</body>
+</html>
