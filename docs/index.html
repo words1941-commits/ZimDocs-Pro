@@ -1,33 +1,32 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ZimDocs Pro — Legacy Technology</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- PWA Manifest -->
+  <title>ZimDocs-Pro — Legacy Technology</title>
+
+  <!-- Theme Color -->
+  <meta name="theme-color" content="#60a5fa" />
+
+  <!-- Manifest -->
   <link rel="manifest" href="./manifest.json" />
 
   <!-- App Icons -->
-  <link rel="icon" href="./icons/favicon.svg" type="image/svg+xml">
-  <link rel="icon" href="./icons/icon-192.png" type="image/png">
-  <link rel="apple-touch-icon" href="./icons/icon-512.png">
-
-  <!-- Theme Colors -->
-  <meta name="theme-color" content="#f9f9f9" />
-  <meta name="background-color" content="#ffffff" />
+  <link rel="icon" href="./icons/icon-192x192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/icon-512x512.png">
 
   <!-- Styles -->
-  <link href="./css/styles.css" rel="stylesheet" />
+  <link rel="stylesheet" href="./css/styles.css" />
 </head>
+
 <body>
   <div id="app" class="app">
     <header class="card header">
       <div class="logo">
-        <!-- ✅ Uses your existing icon-192.png -->
-        <img src="./icons/icon-192.png" alt="ZimDocs Logo" width="64" height="64" />
+        <img src="./icons/icon-192x192.png" alt="ZDPro" width="64" height="64"/>
         <div class="title">
-          <h1>ZimDocs Pro</h1>
+          <h1>ZimDocs-Pro</h1>
           <div class="subtitle">Legacy Technology Edition</div>
         </div>
       </div>
@@ -44,19 +43,18 @@
       </nav>
 
       <section class="content card" id="content" tabindex="0">
-        <!-- Dynamic content -->
+        <!-- dynamic content -->
       </section>
     </main>
   </div>
 
   <script type="module" src="./js/app.js"></script>
   <script>
+    // Register Service Worker
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./service-worker.js')
-          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
-          .catch(err => console.warn('❌ Service Worker failed:', err));
-      });
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log('✅ Service Worker Registered'))
+        .catch(err => console.error('❌ Service Worker failed:', err));
     }
   </script>
 </body>
