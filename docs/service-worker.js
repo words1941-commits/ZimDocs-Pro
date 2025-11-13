@@ -1,4 +1,4 @@
-const CACHE_NAME = "zimdocs-pro-v4";
+const CACHE_NAME = "zimdocs-pro-v5";
 const OFFLINE_URL = "./index.html";
 
 const FILES_TO_CACHE = [
@@ -7,7 +7,9 @@ const FILES_TO_CACHE = [
   "./manifest.json",
   "./css/style.css",
   "./js/app.js",
-  "./assets/markable.png",
+  "./assets/icons/icon-192x192.png",
+  "./assets/icons/icon-384x384.png",
+  "./assets/icons/icon-512x512.png",
   "./assets/screenshot1.png",
   "./assets/screenshot2.png"
 ];
@@ -50,15 +52,3 @@ self.addEventListener("fetch", (event) => {
     })
   );
 });
-
-// Background sync placeholder
-self.addEventListener("sync", (event) => {
-  if (event.tag === "sync-zimdocs-data") {
-    event.waitUntil(syncOfflineData());
-  }
-});
-
-async function syncOfflineData() {
-  const data = await self.clients.matchAll();
-  console.log("Syncing offline data", data.length, "clients.");
-}
