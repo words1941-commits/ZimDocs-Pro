@@ -1,9 +1,10 @@
 {
+  "id": "/zimdocs-pro",
   "name": "ZimDocs-Pro",
   "short_name": "ZimDocs",
-  "description": "Offline Resume, Notes, Photo, and Signature suite — APK only.",
-  "start_url": "./index.html",
-  "scope": "./",
+  "description": "Offline Resume, Notes, and Signature Suite — APK Only",
+  "start_url": "https://<your-username>.github.io/ZimDocs-Pro/docs/index.html",
+  "scope": "https://<your-username>.github.io/ZimDocs-Pro/docs/",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f172a",
@@ -18,6 +19,6 @@
     { "src": "assets/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
     { "src": "assets/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
-  "launch_handler": { "client_mode": "auto" },
+  "launch_handler": { "client_mode": "focus-existing" },
   "prefer_related_applications": false
 }
