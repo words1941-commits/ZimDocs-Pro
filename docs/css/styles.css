@@ -1,5 +1,5 @@
 /* ================================
-   ZimDocs-Pro v5 | Legacy Technology
+   ZimDocs-Pro v9 | Legacy Technology
    Glass UI, Dark Mode, Responsive
    ================================ */
 
@@ -100,7 +100,7 @@ section.content {
   overflow-y: auto;
 }
 
-textarea, input[type="file"], canvas {
+textarea, input[type="file"], canvas, [contenteditable="true"] {
   width: 100%;
   padding: 12px;
   border-radius: 14px;
