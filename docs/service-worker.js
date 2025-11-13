@@ -1,4 +1,4 @@
-const CACHE_NAME = "zimdocs-pro-v1";
+const CACHE_NAME = "zimdocs-pro";
 const OFFLINE_URL = "./index.html";
 
 const ASSETS_TO_CACHE = [
