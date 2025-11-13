@@ -4,10 +4,23 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ZimDocs-Pro — Legacy Technology</title>
+
   <link rel="manifest" href="./manifest.json" />
   <meta name="theme-color" content="#0f172a" />
-  <link rel="icon" href="./assets/icons/icon-192x192.png" />
+  <meta name="background-color" content="#0f172a" />
+  <meta name="description" content="Offline Resume, Notes, and Signature Suite — APK Edition by Legacy Technology" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <link rel="icon" href="./assets/icons/icon-192x192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="./assets/icons/icon-192x192.png" />
+
+  <link rel="preload" href="./css/style.css" as="style" />
   <link href="./css/style.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+
+  <script defer type="module" src="./js/app.js"></script>
 </head>
 <body>
   <div id="app" class="app">
@@ -26,7 +39,6 @@
       <nav class="sidebar card" aria-label="Main navigation">
         <button data-section="home" class="nav-btn">🏠 Home</button>
         <button data-section="resume" class="nav-btn">📄 Resume</button>
-        <button data-section="notes" class="nav-btn">📝 Notes</button>
         <button data-section="photo" class="nav-btn">📸 Photo</button>
         <button data-section="files" class="nav-btn">📂 Files</button>
         <button data-section="sign" class="nav-btn">✍️ Sign</button>
@@ -37,11 +49,19 @@
     </main>
   </div>
 
-  <script type="module" src="./js/app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js');
+      navigator.serviceWorker.register('./service-worker.js')
+        .then(() => console.log("✅ Service Worker registered"))
+        .catch(err => console.error("SW failed:", err));
     }
+
+    const toggle = document.getElementById('darkmode-toggle');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
   </script>
 </body>
 </html>
