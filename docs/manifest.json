@@ -1,28 +1,27 @@
 {
-  "name": "ZimDocs Pro",
+  "name": "ZimDocs-Pro",
   "short_name": "ZimDocs",
   "description": "Offline Resume & Document Builder with Photo, Files, and Signature tools — Made by Legacy Technology.",
   "start_url": "./index.html",
-  "scope": "./",
   "display": "standalone",
   "background_color": "#ffffff",
-  "theme_color": "#f9f9f9",
+  "theme_color": "#60a5fa",
   "orientation": "portrait-primary",
   "icons": [
     {
-      "src": "./icons/icon-192.png",
+      "src": "icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "./icons/icon-512.png",
+      "src": "icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "./icons/maskable.png",
+      "src": "icons/maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -30,16 +29,16 @@
   ],
   "screenshots": [
     {
-      "src": "./icons/screenshot1.png",
+      "src": "icons/screenshot1.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "label": "ZimDocs Pro - Resume Builder"
+      "label": "ZimDocs-Pro — Resume Builder"
     },
     {
-      "src": "./icons/screenshot2.png",
+      "src": "icons/screenshot2.png",
       "sizes": "1280x720",
       "type": "image/png",
-      "label": "ZimDocs Pro - Photo & ID Tools"
+      "label": "ZimDocs-Pro — Photo & File Tools"
     }
   ]
 }
