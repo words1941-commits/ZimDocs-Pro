@@ -1,50 +1,22 @@
 {
   "name": "ZimDocs-Pro",
   "short_name": "ZimDocs",
-  "description": "Offline Resume, Photo, and Signature suite — works anywhere, anytime.",
-  "start_url": "/ZimDocs-Pro/docs/index.html",
-  "scope": "/ZimDocs-Pro/docs/",
+  "description": "Offline Resume, Notes, Photo, and Signature suite — APK only.",
+  "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#0f172a",
   "theme_color": "#0f172a",
   "categories": ["productivity", "utilities", "business"],
   "icons": [
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-48x48.png", "sizes": "48x48", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/icons/maskable-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
-  ],
-  "screenshots": [
-    { "src": "/ZimDocs-Pro/docs/assets/screenshot1.png", "sizes": "800x600", "type": "image/png" },
-    { "src": "/ZimDocs-Pro/docs/assets/screenshot2.png", "sizes": "800x600", "type": "image/png" }
-  ],
-  "shortcuts": [
-    {
-      "name": "Resume Builder",
-      "short_name": "Resume",
-      "url": "/ZimDocs-Pro/docs/index.html#resume",
-      "description": "Quickly open Resume Builder.",
-      "icons": [{ "src": "/ZimDocs-Pro/docs/assets/icons/icon-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Photo Tools",
-      "short_name": "Photo",
-      "url": "/ZimDocs-Pro/docs/index.html#photo",
-      "description": "Edit and crop ID photos offline.",
-      "icons": [{ "src": "/ZimDocs-Pro/docs/assets/icons/icon-192x192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "Sign Tool",
-      "short_name": "Sign",
-      "url": "/ZimDocs-Pro/docs/index.html#sign",
-      "description": "Create and save your signature.",
-      "icons": [{ "src": "/ZimDocs-Pro/docs/assets/icons/icon-192x192.png", "sizes": "192x192" }]
-    }
+    { "src": "assets/icons/icon-48x48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "assets/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png" },
+    { "src": "assets/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "assets/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "assets/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "assets/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ],
   "launch_handler": { "client_mode": "auto" },
   "prefer_related_applications": false
