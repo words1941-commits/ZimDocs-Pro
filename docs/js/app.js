@@ -1,205 +1,145 @@
 /* ================================
-   ZimDocs-Pro | Legacy Technology
-   Offline-Ready App Engine v4.0
+   ZimDocs-Pro v5 | Legacy Technology
+   Glass UI, Dark Mode, Responsive
    ================================ */
 
-console.log("ZimDocs-Pro loaded ✅");
+body {
+  margin: 0;
+  font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: linear-gradient(135deg,#1e1e2f,#2c2c3f);
+  color: #fff;
+  -webkit-font-smoothing: antialiased;
+}
 
-// 🌐 Detect online/offline state
-window.addEventListener("online", () => showStatus("Back online ✅", "success"));
-window.addEventListener("offline", () => showStatus("You're offline. Changes saved locally.", "warning"));
+.card {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(15px);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.15);
+  transition: all 0.3s ease;
+}
 
-// 📦 Local Storage Manager
-const STORAGE_KEY = "zimdocs-pro-data";
-let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
-  resume: "",
-  signature: "",
-  notes: "",
-};
+header.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  margin: 12px;
+}
 
-// 🔔 Status message utility
-function showStatus(msg, type = "info") {
-  let bar = document.getElementById("status-bar");
-  if (!bar) {
-    bar = document.createElement("div");
-    bar.id = "status-bar";
-    bar.style.position = "fixed";
-    bar.style.bottom = "10px";
-    bar.style.left = "50%";
-    bar.style.transform = "translateX(-50%)";
-    bar.style.padding = "10px 16px";
-    bar.style.borderRadius = "8px";
-    bar.style.color = "#fff";
-    bar.style.zIndex = 9999;
-    document.body.appendChild(bar);
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo h1 {
+  margin: 0;
+  font-size: 1.8em;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.5);
+}
+
+.logo .subtitle {
+  font-size: 0.9em;
+  color: #ccc;
+}
+
+.btn {
+  padding: 8px 16px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(34,197,94,0.2);
+  color: #fff;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 20px rgba(34,197,94,0.4);
+  transition: all 0.3s ease;
+  margin-left: 6px;
+}
+
+.btn:hover {
+  background: rgba(34,197,94,0.4);
+  box-shadow: 0 6px 25px rgba(34,197,94,0.6);
+  transform: scale(1.03);
+}
+
+.layout {
+  display: flex;
+  margin: 12px;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+nav.sidebar {
+  flex: 0 0 180px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+}
+
+nav.sidebar .nav-btn {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 1em;
+}
+
+nav.sidebar .footer-note {
+  margin-top: auto;
+  font-size: 0.8em;
+  color: #aaa;
+  text-align: center;
+}
+
+section.content {
+  flex: 1;
+  padding: 20px;
+  min-height: 400px;
+  overflow-y: auto;
+}
+
+textarea, input[type="file"], canvas {
+  width: 100%;
+  padding: 12px;
+  border-radius: 14px;
+  border: none;
+  outline: none;
+  background: rgba(255,255,255,0.1);
+  color: #fff;
+  font-size: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  resize: vertical;
+  margin-top: 10px;
+}
+
+#status-bar {
+  font-weight: 600;
+  text-align: center;
+  letter-spacing: 0.5px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.2);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  transition: opacity 0.3s ease;
+}
+
+body.dark {
+  background: linear-gradient(135deg,#0f172a,#1e293b);
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
   }
-  bar.style.background =
-    type === "success"
-      ? "#22c55e"
-      : type === "warning"
-      ? "#eab308"
-      : "#60a5fa";
-  bar.textContent = msg;
-  bar.style.opacity = 1;
-  setTimeout(() => (bar.style.opacity = 0), 4000);
-}
-
-// 🧰 UI Sections
-const content = document.getElementById("content");
-const navButtons = document.querySelectorAll(".nav-btn");
-
-navButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const section = btn.dataset.section;
-    loadSection(section);
-  });
-});
-
-// 🧱 Default view
-loadSection("home");
-
-// 🚀 Section Loader
-function loadSection(section) {
-  switch (section) {
-    case "home":
-      content.innerHTML = `
-        <h2>🏠 Welcome to ZimDocs-Pro</h2>
-        <p>Offline-ready productivity suite by <b>Legacy Technology</b>.</p>
-        <p>Use the left menu to start building your Resume, edit photos, or sign documents.</p>
-        <button id="backup-btn" class="btn">📤 Backup Data</button>
-        <button id="restore-btn" class="btn">📥 Restore Data</button>
-      `;
-      document.getElementById("backup-btn").onclick = backupData;
-      document.getElementById("restore-btn").onclick = restoreData;
-      break;
-
-    case "resume":
-      content.innerHTML = `
-        <h2>📄 Resume Builder</h2>
-        <textarea id="resume-text" placeholder="Write your resume here..." rows="14">${appData.resume || ""}</textarea>
-        <button class="btn" id="save-resume">💾 Save</button>
-      `;
-      document.getElementById("save-resume").onclick = () => {
-        appData.resume = document.getElementById("resume-text").value;
-        saveData();
-        showStatus("Resume saved ✅", "success");
-      };
-      break;
-
-    case "photo":
-      content.innerHTML = `
-        <h2>📸 Photo Tools</h2>
-        <div class="preview-photo">Upload photo feature coming soon...</div>
-      `;
-      break;
-
-    case "files":
-      content.innerHTML = `
-        <h2>📂 File Manager</h2>
-        <p>Coming soon — offline document viewer.</p>
-      `;
-      break;
-
-    case "sign":
-      content.innerHTML = `
-        <h2>✍️ Signature Pad</h2>
-        <canvas id="sign-pad" width="300" height="150" style="border:1px solid #ccc;border-radius:8px;background:white;"></canvas>
-        <div style="margin-top:10px;">
-          <button id="save-sign" class="btn">💾 Save</button>
-          <button id="clear-sign" class="btn">🧹 Clear</button>
-        </div>
-      `;
-      initSignaturePad();
-      break;
-
-    default:
-      content.innerHTML = `<h2>Section not found.</h2>`;
+  nav.sidebar {
+    flex: 1;
+    flex-direction: row;
+    overflow-x: auto;
   }
-}
-
-// 💾 Save all local data
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-}
-
-// 📤 Backup data (download JSON)
-function backupData() {
-  const blob = new Blob([JSON.stringify(appData, null, 2)], {
-    type: "application/json",
-  });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "zimdocs-backup.json";
-  link.click();
-  showStatus("Backup downloaded 💾", "success");
-}
-
-// 📥 Restore data (upload JSON)
-function restoreData() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "application/json";
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const data = JSON.parse(event.target.result);
-        appData = data;
-        saveData();
-        showStatus("Backup restored ✅", "success");
-        loadSection("home");
-      } catch {
-        showStatus("Invalid backup file ❌", "warning");
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-
-// 🖊 Signature pad system
-function initSignaturePad() {
-  const canvas = document.getElementById("sign-pad");
-  const ctx = canvas.getContext("2d");
-  let drawing = false;
-
-  const startDraw = (e) => {
-    drawing = true;
-    ctx.beginPath();
-    ctx.moveTo(
-      e.clientX - canvas.getBoundingClientRect().left,
-      e.clientY - canvas.getBoundingClientRect().top
-    );
-  };
-  const draw = (e) => {
-    if (!drawing) return;
-    ctx.lineTo(
-      e.clientX - canvas.getBoundingClientRect().left,
-      e.clientY - canvas.getBoundingClientRect().top
-    );
-    ctx.stroke();
-  };
-  const stopDraw = () => (drawing = false);
-
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", stopDraw);
-  canvas.addEventListener("mouseleave", stopDraw);
-
-  document.getElementById("save-sign").onclick = () => {
-    appData.signature = canvas.toDataURL();
-    saveData();
-    showStatus("Signature saved 🖋️", "success");
-  };
-
-  document.getElementById("clear-sign").onclick = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  };
-}
-
-// 🌙 Apply dark mode theme
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
+  nav.sidebar .nav-btn {
+    flex: 0 0 auto;
+  }
 }
