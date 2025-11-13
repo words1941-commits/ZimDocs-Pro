@@ -1,28 +1,29 @@
 /* ================================
-   ZimDocs-Pro | Legacy Technology
-   Offline-Ready App Engine v5
+   ZimDocs-Pro v9 | Legacy Technology
+   APK-only, iPhone Glass UI, Offline Ready
    ================================ */
 
-console.log("ZimDocs-Pro loaded ✅");
+import jsPDF from './lib/jspdf.umd.min.js';
 
-// 🌐 Detect online/offline state
-window.addEventListener("online", () => showStatus("Back online ✅", "success"));
-window.addEventListener("offline", () => showStatus("You're offline. Changes saved locally.", "warning"));
+console.log("ZimDocs-Pro v9 APK loaded ✅");
 
-// 📦 Local Storage Manager
 const STORAGE_KEY = "zimdocs-pro-data";
 let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
   resume: "",
-  signature: "",
   notes: "",
-  files: [],
-  photos: []
+  signature: "",
+  photos: [],
+  templates: [],
+  notesTemplates: []
 };
 
-// 🔔 Status message utility
-function showStatus(msg, type = "info") {
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+function showStatus(msg, type="info") {
   let bar = document.getElementById("status-bar");
-  if (!bar) {
+  if(!bar) {
     bar = document.createElement("div");
     bar.id = "status-bar";
     bar.style.position = "fixed";
@@ -33,156 +34,188 @@ function showStatus(msg, type = "info") {
     bar.style.borderRadius = "12px";
     bar.style.color = "#fff";
     bar.style.zIndex = 9999;
+    bar.style.backdropFilter = "blur(10px)";
     document.body.appendChild(bar);
   }
-  bar.style.background =
-    type === "success"
-      ? "#22c55e"
-      : type === "warning"
-      ? "#eab308"
-      : "#60a5fa";
+  bar.style.background = type === "success" ? "#22c55e" : type === "warning" ? "#eab308" : "#60a5fa";
   bar.textContent = msg;
   bar.style.opacity = 1;
-  setTimeout(() => (bar.style.opacity = 0), 4000);
+  setTimeout(() => bar.style.opacity = 0, 4000);
 }
 
-// 🧰 UI Sections
+// Dark mode toggle
+const toggle = document.getElementById('darkmode-toggle');
+toggle.addEventListener('click', () => {
+  document.body.classList.toggle('dark');
+  localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+});
+if(localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
+
+// Preload Resume Templates
+if(appData.templates.length === 0) {
+  appData.templates = [
+    {id:"t1",name:"Modern Professional",content:"<h2>John Doe</h2><p>Software Engineer</p><p>XYZ Corp, 5 yrs</p>",images:[]},
+    {id:"t2",name:"Creative Designer",content:"<h2>Jane Smith</h2><p>Graphic Designer</p><p>ABC Studio, 3 yrs</p>",images:[]},
+    {id:"t3",name:"Tech Lead",content:"<h2>Mike Johnson</h2><p>Tech Lead</p><p>Experience: 8 yrs</p>",images:[]},
+    {id:"t4",name:"Marketing Expert",content:"<h2>Sarah Lee</h2><p>Marketing Specialist</p><p>DEF Agency, 6 yrs</p>",images:[]},
+    {id:"t5",name:"Product Manager",content:"<h2>David Kim</h2><p>Product Manager</p><p>GHI Corp, 7 yrs</p>",images:[]},
+    {id:"t6",name:"UX/UI Designer",content:"<h2>Emily Wong</h2><p>UX/UI Designer</p><p>JKL Studio, 4 yrs</p>",images:[]},
+    {id:"t7",name:"Full Stack Developer",content:"<h2>Chris Brown</h2><p>Full Stack Developer</p><p>MNO Inc, 5 yrs</p>",images:[]},
+    {id:"t8",name:"Data Analyst",content:"<h2>Anna Davis</h2><p>Data Analyst</p><p>PQR Corp, 3 yrs</p>",images:[]},
+    {id:"t9",name:"Sales Executive",content:"<h2>James Wilson</h2><p>Sales Executive</p><p>STU Ltd, 6 yrs</p>",images:[]},
+    {id:"t10",name:"Entrepreneur",content:"<h2>Olivia Martin</h2><p>Founder & CEO</p><p>Venture XYZ</p>",images:[]}
+  ];
+  saveData();
+}
+
+// Preload Notes Templates
+if(appData.notesTemplates.length === 0) {
+  appData.notesTemplates = [
+    {id:"n1",name:"Meeting Notes",content:"<h2>Meeting Notes</h2><p>Date:</p><p>Attendees:</p><p>Notes:</p>"},
+    {id:"n2",name:"Project Plan",content:"<h2>Project Plan</h2><p>Title:</p><p>Tasks:</p><p>Timeline:</p>"},
+    {id:"n3",name:"Ideas Log",content:"<h2>Ideas Log</h2><p>Idea:</p><p>Description:</p><p>Notes:</p>"},
+    {id:"n4",name:"Daily Journal",content:"<h2>Daily Journal</h2><p>Date:</p><p>Activities:</p><p>Reflections:</p>"},
+    {id:"n5",name:"Research Notes",content:"<h2>Research Notes</h2><p>Topic:</p><p>Findings:</p><p>Summary:</p>"}
+  ];
+  saveData();
+}
+
 const content = document.getElementById("content");
 const navButtons = document.querySelectorAll(".nav-btn");
 
-navButtons.forEach((btn) => {
-  btn.addEventListener("click", () => {
-    const section = btn.dataset.section;
-    loadSection(section);
-  });
+navButtons.forEach(btn => {
+  btn.addEventListener("click", () => loadSection(btn.dataset.section));
 });
 
-// 🧱 Default view
-loadSection("home");
-
-// 🚀 Section Loader
+// Load sections
 function loadSection(section) {
-  switch (section) {
+  switch(section){
     case "home":
       content.innerHTML = `
-        <h2>🏠 Welcome to ZimDocs-Pro</h2>
-        <p>Offline-ready productivity suite by <b>Legacy Technology</b>.</p>
-        <p>Use the left menu to start building your Resume, edit photos, or sign documents.</p>
-        <button id="backup-btn" class="btn">📤 Backup Data</button>
-        <button id="restore-btn" class="btn">📥 Restore Data</button>
+        <h2>🏠 Welcome to ZimDocs-Pro v9</h2>
+        <p>Offline-ready, APK-only productivity suite.</p>
+        <p>Select a section from the left menu to start building your Resume, Notes, edit Photos, manage Files, or Sign documents.</p>
       `;
-      document.getElementById("backup-btn").onclick = backupData;
-      document.getElementById("restore-btn").onclick = restoreData;
       break;
 
     case "resume":
+      let resumeOptions = appData.templates.map(t => `<option value="${t.id}">${t.name}</option>`).join('');
       content.innerHTML = `
         <h2>📄 Resume Builder</h2>
-        <textarea id="resume-text" placeholder="Write your resume here..." rows="14">${appData.resume || ""}</textarea>
-        <button class="btn" id="save-resume">💾 Save</button>
+        <select id="template-select">${resumeOptions}</select>
+        <div id="resume-editor" contenteditable="true" style="min-height:300px;margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);"></div>
+        <div style="margin-top:10px;">
+          <button id="save-resume" class="btn">💾 Save</button>
+          <button id="export-resume" class="btn">📄 Export PDF</button>
+          <input type="file" id="add-image" accept="image/*" class="btn" style="display:inline-block;"/>
+        </div>
       `;
-      document.getElementById("save-resume").onclick = () => {
-        appData.resume = document.getElementById("resume-text").value;
+      const editor = document.getElementById("resume-editor");
+      const select = document.getElementById("template-select");
+      function loadTemplate(id){
+        const temp = appData.templates.find(t => t.id===id);
+        editor.innerHTML = temp.content;
+      }
+      loadTemplate(select.value);
+      select.addEventListener("change",()=>loadTemplate(select.value));
+
+      document.getElementById("save-resume").onclick = ()=>{
+        appData.resume = editor.innerHTML;
         saveData();
-        showStatus("Resume saved ✅", "success");
+        showStatus("Resume saved ✅","success");
+      };
+
+      document.getElementById("export-resume").onclick = ()=>{
+        const doc = new jsPDF.jsPDF();
+        doc.html(editor, {callback:function(pdf){pdf.save("resume.pdf");}});
+        showStatus("PDF exported ✅","success");
+      };
+
+      document.getElementById("add-image").addEventListener("change",(e)=>{
+        const file = e.target.files[0];
+        if(!file) return;
+        const reader = new FileReader();
+        reader.onload=(ev)=>{
+          const img = `<img src="${ev.target.result}" style="max-width:200px;margin-top:10px;">`;
+          editor.innerHTML += img;
+        };
+        reader.readAsDataURL(file);
+      });
+      break;
+
+    case "notes":
+      let notesOptions = appData.notesTemplates.map(n=>`<option value="${n.id}">${n.name}</option>`).join('');
+      content.innerHTML = `
+        <h2>📝 Notes</h2>
+        <select id="notes-select">${notesOptions}</select>
+        <div id="notes-editor" contenteditable="true" style="min-height:300px;margin-top:10px;padding:12px;border-radius:12px;background:rgba(255,255,255,0.1);backdrop-filter:blur(10px);"></div>
+        <div style="margin-top:10px;">
+          <button id="save-notes" class="btn">💾 Save</button>
+          <button id="export-notes" class="btn">📄 Export PDF</button>
+        </div>
+      `;
+      const notesEditor = document.getElementById("notes-editor");
+      const notesSelect = document.getElementById("notes-select");
+      function loadNoteTemplate(id){
+        const temp = appData.notesTemplates.find(n=>n.id===id);
+        notesEditor.innerHTML = temp.content;
+      }
+      loadNoteTemplate(notesSelect.value);
+      notesSelect.addEventListener("change",()=>loadNoteTemplate(notesSelect.value));
+      document.getElementById("save-notes").onclick = ()=>{
+        appData.notes = notesEditor.innerHTML;
+        saveData();
+        showStatus("Notes saved ✅","success");
+      };
+      document.getElementById("export-notes").onclick = ()=>{
+        const doc = new jsPDF.jsPDF();
+        doc.html(notesEditor,{callback:pdf=>pdf.save("notes.pdf")});
+        showStatus("PDF exported ✅","success");
       };
       break;
 
     case "photo":
       content.innerHTML = `
         <h2>📸 Photo Tools</h2>
-        <input type="file" id="photo-input" accept="image/*" multiple />
-        <div id="photo-gallery" style="display:flex;flex-wrap:wrap;margin-top:10px;gap:10px;"></div>
+        <input type="file" id="photo-upload" accept="image/*"/>
+        <div id="photo-preview" style="margin-top:10px;"></div>
       `;
-      const photoInput = document.getElementById("photo-input");
-      const gallery = document.getElementById("photo-gallery");
-
-      function renderPhotos() {
-        gallery.innerHTML = "";
-        appData.photos.forEach((src, i) => {
-          const img = document.createElement("img");
-          img.src = src;
-          img.style.width = "120px";
-          img.style.height = "120px";
-          img.style.objectFit = "cover";
-          img.style.borderRadius = "12px";
-          img.style.boxShadow = "0 4px 15px rgba(0,0,0,0.5)";
-          img.title = "Click to remove";
-          img.addEventListener("click", () => {
-            appData.photos.splice(i, 1);
-            saveData();
-            renderPhotos();
-          });
-          gallery.appendChild(img);
-        });
-      }
-
-      photoInput.addEventListener("change", (e) => {
-        const files = Array.from(e.target.files);
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            appData.photos.push(ev.target.result);
-            saveData();
-            renderPhotos();
-          };
-          reader.readAsDataURL(file);
-        });
+      document.getElementById("photo-upload").addEventListener("change",(e)=>{
+        const file=e.target.files[0];
+        if(!file) return;
+        const reader=new FileReader();
+        reader.onload=(ev)=>{
+          const img=document.createElement("img");
+          img.src=ev.target.result;
+          img.style.maxWidth="200px";
+          document.getElementById("photo-preview").appendChild(img);
+          appData.photos.push(ev.target.result);
+          saveData();
+          showStatus("Photo added ✅","success");
+        };
+        reader.readAsDataURL(file);
       });
-
-      renderPhotos();
       break;
 
     case "files":
       content.innerHTML = `
         <h2>📂 File Manager</h2>
-        <input type="file" id="file-input" multiple />
-        <div id="file-list" style="margin-top:10px;"></div>
+        <p>All offline files are stored locally in APK.</p>
+        <ul id="file-list"></ul>
       `;
-
-      const fileInput = document.getElementById("file-input");
-      const fileList = document.getElementById("file-list");
-
-      function renderFiles() {
-        fileList.innerHTML = "";
-        appData.files.forEach((f, i) => {
-          const div = document.createElement("div");
-          div.style.display = "flex";
-          div.style.justifyContent = "space-between";
-          div.style.marginBottom = "6px";
-          div.innerHTML = `
-            <span>${f.name}</span>
-            <button class="btn" style="padding:2px 6px;">🗑️ Delete</button>
-          `;
-          div.querySelector("button").onclick = () => {
-            appData.files.splice(i, 1);
-            saveData();
-            renderFiles();
-          };
-          fileList.appendChild(div);
-        });
-      }
-
-      fileInput.addEventListener("change", (e) => {
-        const files = Array.from(e.target.files);
-        files.forEach((file) => {
-          const reader = new FileReader();
-          reader.onload = (ev) => {
-            appData.files.push({ name: file.name, data: ev.target.result });
-            saveData();
-            renderFiles();
-          };
-          reader.readAsDataURL(file);
-        });
+      const list = document.getElementById("file-list");
+      appData.photos.forEach((p,i)=>{
+        const li = document.createElement("li");
+        li.innerHTML=`Photo ${i+1} <button class="btn">View</button>`;
+        li.querySelector("button").onclick=()=>window.open(p,"_blank");
+        list.appendChild(li);
       });
-
-      renderFiles();
       break;
 
     case "sign":
       content.innerHTML = `
         <h2>✍️ Signature Pad</h2>
-        <canvas id="sign-pad" width="300" height="150" style="border:1px solid #ccc;border-radius:8px;background:white;"></canvas>
+        <canvas id="sign-pad" width="300" height="150" style="border:1px solid #ccc;border-radius:12px;background:white;"></canvas>
         <div style="margin-top:10px;">
           <button id="save-sign" class="btn">💾 Save</button>
           <button id="clear-sign" class="btn">🧹 Clear</button>
@@ -192,94 +225,29 @@ function loadSection(section) {
       break;
 
     default:
-      content.innerHTML = `<h2>Section not found.</h2>`;
+      content.innerHTML="<h2>Section not found</h2>";
   }
 }
 
-// 💾 Save all local data
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
-}
-
-// 📤 Backup data (download JSON)
-function backupData() {
-  const blob = new Blob([JSON.stringify(appData, null, 2)], { type: "application/json" });
-  const link = document.createElement("a");
-  link.href = URL.createObjectURL(blob);
-  link.download = "zimdocs-backup.json";
-  link.click();
-  showStatus("Backup downloaded 💾", "success");
-}
-
-// 📥 Restore data (upload JSON)
-function restoreData() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "application/json";
-  input.onchange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      try {
-        const data = JSON.parse(event.target.result);
-        appData = data;
-        saveData();
-        showStatus("Backup restored ✅", "success");
-        loadSection("home");
-      } catch {
-        showStatus("Invalid backup file ❌", "warning");
-      }
-    };
-    reader.readAsText(file);
-  };
-  input.click();
-}
-
-// 🖊 Signature pad system
-function initSignaturePad() {
-  const canvas = document.getElementById("sign-pad");
-  const ctx = canvas.getContext("2d");
-  ctx.lineWidth = 2;
-  ctx.strokeStyle = "#22c55e";
-  let drawing = false;
-
-  const startDraw = (e) => {
-    drawing = true;
-    ctx.beginPath();
-    ctx.moveTo(e.offsetX, e.offsetY);
-  };
-  const draw = (e) => {
-    if (!drawing) return;
-    ctx.lineTo(e.offsetX, e.offsetY);
-    ctx.stroke();
-  };
-  const stopDraw = () => (drawing = false);
-
-  canvas.addEventListener("mousedown", startDraw);
-  canvas.addEventListener("mousemove", draw);
-  canvas.addEventListener("mouseup", stopDraw);
-  canvas.addEventListener("mouseleave", stopDraw);
-
-  document.getElementById("save-sign").onclick = () => {
-    appData.signature = canvas.toDataURL();
+// Signature Pad
+function initSignaturePad(){
+  const canvas=document.getElementById("sign-pad");
+  const ctx=canvas.getContext("2d");
+  let drawing=false;
+  const startDraw=e=>{drawing=true;ctx.beginPath();ctx.moveTo(e.clientX-canvas.getBoundingClientRect().left,e.clientY-canvas.getBoundingClientRect().top)};
+  const draw=e=>{if(!drawing) return;ctx.lineTo(e.clientX-canvas.getBoundingClientRect().left,e.clientY-canvas.getBoundingClientRect().top);ctx.stroke()};
+  const stopDraw=()=>drawing=false;
+  canvas.addEventListener("mousedown",startDraw);
+  canvas.addEventListener("mousemove",draw);
+  canvas.addEventListener("mouseup",stopDraw);
+  canvas.addEventListener("mouseleave",stopDraw);
+  document.getElementById("save-sign").onclick=()=>{
+    appData.signature=canvas.toDataURL();
     saveData();
-    showStatus("Signature saved 🖋️", "success");
+    showStatus("Signature saved 🖋️","success");
   };
-
-  document.getElementById("clear-sign").onclick = () => {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  };
-
-  // Load saved signature if exists
-  if (appData.signature) {
-    const img = new Image();
-    img.src = appData.signature;
-    img.onload = () => ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-  }
+  document.getElementById("clear-sign").onclick=()=>ctx.clearRect(0,0,canvas.width,canvas.height);
 }
 
-// 🌙 Apply dark mode theme
-if (localStorage.getItem("theme") === "dark") {
-  document.body.classList.add("dark");
-}
+// Load default section
+loadSection("home");
