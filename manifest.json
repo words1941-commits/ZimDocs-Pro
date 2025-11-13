@@ -1,0 +1,25 @@
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ZimDocs-Pro — Legacy Technology</title>
+
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="./manifest.json" />
+
+  <!-- Icons -->
+  <link rel="icon" href="./icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/icon-512.png">
+
+  <meta name="theme-color" content="#f9f9f9" />
+  <link href="./css/styles.css" rel="stylesheet" />
+</head>
+<body>
+  <header class="card header">
+    <div class="logo">
+      <img src="./icons/icon-192.png" alt="ZimDocs-Pro Logo" width="64" height="64" />
+      <div class="title">
+        <h1>ZimDocs-Pro</h1>
+        <div class="subtitle">Legacy Technology Edition</div>
+      </div>
+    </div>
+  </header>
