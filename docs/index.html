@@ -5,19 +5,27 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ZimDocs-Pro — Legacy Technology</title>
 
+  <!-- ✅ PWA manifest -->
   <link rel="manifest" href="./manifest.json" />
+
+  <!-- ✅ Theme colors -->
   <meta name="theme-color" content="#0f172a" />
   <meta name="background-color" content="#0f172a" />
-  <meta name="description" content="Offline Resume, Notes, and Signature Suite — APK Edition by Legacy Technology" />
+
+  <!-- ✅ iOS/PWA support -->
   <meta name="mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="description" content="Offline Resume, Notes, and Signature Suite — APK Edition by Legacy Technology" />
 
-  <link rel="icon" href="./assets/icons/icon-192x192.png" type="image/png" />
+  <!-- ✅ Icons -->
+  <link rel="icon" href="./assets/icons/icon-192x192.png" />
   <link rel="apple-touch-icon" href="./assets/icons/icon-192x192.png" />
 
-  <link rel="preload" href="./css/style.css" as="style" />
-  <link href="./css/style.css" rel="stylesheet" />
+  <!-- ✅ Glass UI styling -->
+  <link rel="stylesheet" href="./css/style.css" />
+
+  <!-- ✅ Font -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
 
   <script defer type="module" src="./js/app.js"></script>
@@ -45,17 +53,20 @@
         <div class="footer-note">Made by Legacy Technology</div>
       </nav>
 
-      <section class="content card" id="content" tabindex="0"></section>
+      <section class="content card" id="content" tabindex="0">
+        <h2>Loading ZimDocs-Pro...</h2>
+      </section>
     </main>
   </div>
 
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log("✅ Service Worker registered"))
-        .catch(err => console.error("SW failed:", err));
+        .then(() => console.log('✅ Service Worker active'))
+        .catch(err => console.error('SW Error:', err));
     }
 
+    // Dark mode toggle
     const toggle = document.getElementById('darkmode-toggle');
     toggle.addEventListener('click', () => {
       document.body.classList.toggle('dark');
