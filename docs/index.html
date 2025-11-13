@@ -2,20 +2,36 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>ZimDocs-Pro — Legacy Technology</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <title>ZimDocs Pro — Legacy Technology</title>
+
+  <!-- PWA Manifest -->
   <link rel="manifest" href="./manifest.json" />
-  <meta name="theme-color" content="#60a5fa" />
-  <link rel="icon" href="./icons/favicon.svg" />
+
+  <!-- Theme & App Colors -->
+  <meta name="theme-color" content="#f9f9f9" />
+  <meta name="background-color" content="#ffffff" />
+
+  <!-- App Icons -->
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="192x192" href="icons/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="512x512" href="icons/icon-512.png" />
+  <link rel="icon" href="icons/favicon.svg" type="image/svg+xml" />
+
+  <!-- App Description -->
+  <meta name="description" content="Offline Resume & Document Builder with Photo, Files, and Signature tools — Made by Legacy Technology." />
+  
+  <!-- Styles -->
   <link href="css/styles.css" rel="stylesheet" />
 </head>
 <body>
   <div id="app" class="app">
     <header class="card header">
       <div class="logo">
-        <img src="icons/icon-192.svg" alt="ZDPro" width="64" height="64"/>
+        <img src="icons/icon-192.png" alt="ZimDocs Logo" width="64" height="64"/>
         <div class="title">
-          <h1>ZimDocs-Pro</h1>
+          <h1>ZimDocs Pro</h1>
           <div class="subtitle">Legacy Technology Edition</div>
         </div>
       </div>
@@ -32,15 +48,22 @@
       </nav>
 
       <section class="content card" id="content" tabindex="0">
-        <!-- dynamic content -->
+        <!-- Dynamic content -->
       </section>
     </main>
   </div>
 
+  <!-- Main App Script -->
   <script type="module" src="js/app.js"></script>
+
+  <!-- Service Worker Registration -->
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/service-worker.js').catch(()=>{});
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js')
+          .then(reg => console.log('✅ Service Worker registered:', reg.scope))
+          .catch(err => console.warn('❌ Service Worker registration failed:', err));
+      });
     }
   </script>
 </body>
