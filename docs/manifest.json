@@ -1,12 +1,21 @@
 {
-  "name": "ZimDocs-Pro",
+  "id": "/ZimDocs-Pro/",
+  "lang": "en",
+  "name": "ZimDocs-Pro — Legacy Technology Edition",
   "short_name": "ZimDocs",
   "description": "Offline Resume & Document Builder with Photo, Files, and Signature tools — Made by Legacy Technology.",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
+  "orientation": "portrait-primary",
   "background_color": "#ffffff",
   "theme_color": "#60a5fa",
-  "orientation": "portrait-primary",
+  "categories": [
+    "productivity",
+    "tools",
+    "education",
+    "utilities"
+  ],
   "icons": [
     {
       "src": "icons/icon-192x192.png",
@@ -25,6 +34,29 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Create Resume",
+      "short_name": "Resume",
+      "description": "Go to the Resume Builder section.",
+      "url": "./index.html#resume",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Photo Tools",
+      "short_name": "Photo",
+      "description": "Open the photo editing section.",
+      "url": "./index.html#photo",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "Sign Document",
+      "short_name": "Sign",
+      "description": "Open signature capture tools.",
+      "url": "./index.html#sign",
+      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
   "screenshots": [
