@@ -1,54 +1,205 @@
-const content = document.getElementById('content');
-const sections = { home: homeSection, resume: resumeSection, photo: photoSection, files: filesSection, sign: signSection };
-document.querySelectorAll('.nav-btn').forEach(b=>{ b.addEventListener('click', ()=> navigate(b.getAttribute('data-section'))); });
-function navigate(name){ const fn = sections[name] || homeSection; content.innerHTML = ''; content.appendChild(fn()); }
-navigate('home');
+/* ================================
+   ZimDocs-Pro | Legacy Technology
+   Offline-Ready App Engine v4.0
+   ================================ */
 
-function homeSection(){
-  const el = document.createElement('div');
-  el.innerHTML = `<div class="section-header"><h2>Welcome to ZimDocs-Pro</h2><div class="small">Fully offline • Prebuilt samples • Editable templates</div></div>
-  <div class="card preview-card"><p>Try Resume to create a professional PDF/DOC, Photo to make passport images, Sign to create digital signatures, and Files to manage your documents offline.</p>
-  <div style="margin-top:12px"><button class="btn" id="open-resume">Open Demo Resume</button></div></div>`;
-  el.querySelector('#open-resume').addEventListener('click', ()=> navigate('resume'));
-  return el;
-}
+console.log("ZimDocs-Pro loaded ✅");
 
-function resumeSection(){
-  const el = document.createElement('div');
-  el.innerHTML = `<div class="section-header"><h2>Resume Builder</h2><div class="small">Fill the form — preview updates live. Export to PDF or DOC.</div></div>
-  <div style="display:flex;gap:16px">
-    <form id="resume-form" style="flex:1">
-      <div class="form-row"><input id="r-name" placeholder="Full name" /></div>
-      <div class="form-row"><input id="r-email" placeholder="Email" /></div>
-      <div class="form-row"><input id="r-phone" placeholder="Phone" /></div>
-      <div class="form-row"><input id="r-title" placeholder="Professional title" /></div>
-      <div class="form-row"><textarea id="r-summary" placeholder="Professional summary" rows="3"></textarea></div>
-      <div style="display:flex;gap:8px"><button type="button" id="save-resume" class="btn">Save</button><button type="button" id="export-pdf" class="btn">Export PDF</button><button type="button" id="export-doc" class="btn">Export DOC</button></div>
-    </form>
-    <div style="width:460px"><div class="preview-card" id="resume-preview"></div></div>
-  </div>`;
-  const demo = { name:"Jane Doe", email:"jane.doe@example.com", phone:"+263 77 123 4567", title:"Software Engineer", summary:"Experienced software engineer with a passion for building offline-capable web apps." };
-  const saved = JSON.parse(localStorage.getItem('zim_resume') || 'null');
-  const data = saved || demo;
-  ['name','email','phone','title','summary'].forEach(k=> document.getElementById('r-'+k).value = data[k] || '');
-  function updatePreview(){ const doc = { name: document.getElementById('r-name').value, email: document.getElementById('r-email').value, phone: document.getElementById('r-phone').value, title: document.getElementById('r-title').value, summary: document.getElementById('r-summary').value };
-    const pv = document.getElementById('resume-preview');
-    pv.innerHTML = `<h3 style="margin:0">${escapeHtml(doc.name)}</h3><div class="small">${escapeHtml(doc.title)}</div><div style="margin-top:8px">${escapeHtml(doc.summary)}</div><hr style="margin:12px 0"/><div class="small">Email: ${escapeHtml(doc.email)} · Phone: ${escapeHtml(doc.phone)}</div>`;
-    return doc;
+// 🌐 Detect online/offline state
+window.addEventListener("online", () => showStatus("Back online ✅", "success"));
+window.addEventListener("offline", () => showStatus("You're offline. Changes saved locally.", "warning"));
+
+// 📦 Local Storage Manager
+const STORAGE_KEY = "zimdocs-pro-data";
+let appData = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+  resume: "",
+  signature: "",
+  notes: "",
+};
+
+// 🔔 Status message utility
+function showStatus(msg, type = "info") {
+  let bar = document.getElementById("status-bar");
+  if (!bar) {
+    bar = document.createElement("div");
+    bar.id = "status-bar";
+    bar.style.position = "fixed";
+    bar.style.bottom = "10px";
+    bar.style.left = "50%";
+    bar.style.transform = "translateX(-50%)";
+    bar.style.padding = "10px 16px";
+    bar.style.borderRadius = "8px";
+    bar.style.color = "#fff";
+    bar.style.zIndex = 9999;
+    document.body.appendChild(bar);
   }
-  updatePreview();
-  ['r-name','r-email','r-phone','r-title','r-summary'].forEach(id=>document.getElementById(id).addEventListener('input', updatePreview));
-  el.querySelector('#save-resume').addEventListener('click', ()=> { const d = updatePreview(); localStorage.setItem('zim_resume', JSON.stringify(d)); alert('Resume saved offline.'); });
-  el.querySelector('#export-pdf').addEventListener('click', ()=> { const d = updatePreview(); const w = window.open('', '_blank'); w.document.write(`<html><head><title>${escapeHtml(d.name)} - Resume</title><style>body{font-family:Arial;padding:24px;color:#0f172a}h1{margin-bottom:4px}.small{color:#6b7280}</style></head><body><h1>${escapeHtml(d.name)}</h1><div class="small">${escapeHtml(d.title)}</div><p>${escapeHtml(d.summary)}</p><hr/><div class="small">Email: ${escapeHtml(d.email)} · ${escapeHtml(d.phone)}</div></body></html>`); w.document.close(); w.print(); });
-  el.querySelector('#export-doc').addEventListener('click', ()=> { const d = updatePreview(); const html = `<html><head><meta charset="utf-8"></head><body><h1>${escapeHtml(d.name)}</h1><h3>${escapeHtml(d.title)}</h3><p>${escapeHtml(d.summary)}</p><p>Email: ${escapeHtml(d.email)} · ${escapeHtml(d.phone)}</p></body></html>`; const blob = new Blob(['\ufeff', html], {type: 'application/msword'}); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = (d.name || 'resume') + '.doc'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); });
-  return el;
+  bar.style.background =
+    type === "success"
+      ? "#22c55e"
+      : type === "warning"
+      ? "#eab308"
+      : "#60a5fa";
+  bar.textContent = msg;
+  bar.style.opacity = 1;
+  setTimeout(() => (bar.style.opacity = 0), 4000);
 }
 
-function photoSection(){ const el = document.createElement('div'); el.innerHTML = `<div class="section-header"><h2>Photo Tools</h2><div class="small">Upload and convert to passport-sized image or use for ID cards.</div></div><div style="display:flex;gap:12px"><div style="flex:1"><input type="file" id="photo-file" accept="image/*" /><div style="margin-top:8px"><button class="btn" id="crop-btn">Make Passport Photo</button></div></div><div style="width:220px"><div class="preview-photo" id="photo-preview">No photo</div></div></div>`; const fileInput = el.querySelector('#photo-file'); const preview = el.querySelector('#photo-preview'); fileInput.addEventListener('change',(e)=>{ const f=e.target.files[0]; if(!f) return; const reader=new FileReader(); reader.onload=()=>{ localStorage.setItem('zim_photo', reader.result); preview.style.backgroundImage=`url(${reader.result})`; preview.style.backgroundSize='cover'; preview.textContent=''; }; reader.readAsDataURL(f); }); el.querySelector('#crop-btn').addEventListener('click', ()=>{ const data = localStorage.getItem('zim_photo'); if(!data){alert('Upload a photo first'); return;} const img=new Image(); img.onload=()=>{ const canvas=document.createElement('canvas'); const size=600; canvas.width=size; canvas.height=size; const ctx=canvas.getContext('2d'); const s=Math.min(img.width,img.height); const sx=(img.width-s)/2; const sy=(img.height-s)/2; ctx.drawImage(img,sx,sy,s,s,0,0,size,size); const out=canvas.toDataURL('image/png'); localStorage.setItem('zim_passport', out); preview.style.backgroundImage=`url(${out})`; alert('Passport-style photo created and saved locally.'); }; img.src=data; }); const saved = localStorage.getItem('zim_passport') || localStorage.getItem('zim_photo'); if(saved){ preview.style.backgroundImage=`url(${saved})`; preview.style.backgroundSize='cover'; preview.textContent=''; } return el; }
+// 🧰 UI Sections
+const content = document.getElementById("content");
+const navButtons = document.querySelectorAll(".nav-btn");
 
-function filesSection(){ const el=document.createElement('div'); el.innerHTML=`<div class="section-header"><h2>Files</h2><div class="small">Manage documents generated by the app (saved in local browser storage).</div></div><div><div id="files-list"></div><div style="margin-top:12px"><button class="btn" id="clear-files">Clear All Saved Files</button></div></div>`; function render(){ const list=document.getElementById('files-list'); list.innerHTML=''; const keys=Object.keys(localStorage).filter(k=>k.startsWith('zim_file_')||k.startsWith('zim_doc_')); if(keys.length===0){ list.innerHTML='<div class="small">No saved files</div>'; return;} keys.forEach(k=>{ const d=JSON.parse(localStorage.getItem(k)); const row=document.createElement('div'); row.style.display='flex';row.style.alignItems='center';row.style.justifyContent='space-between';row.style.gap='8px';row.style.padding='8px';row.style.borderBottom='1px solid rgba(0,0,0,0.04)'; row.innerHTML=`<div><strong>${d.name}</strong><div class="small">${d.type}</div></div><div><button class="btn tiny" data-key="${k}">Download</button></div>`; list.appendChild(row); }); list.querySelectorAll('button[data-key]').forEach(b=>{ b.addEventListener('click', ()=>{ const k=b.getAttribute('data-key'); const d=JSON.parse(localStorage.getItem(k)); const blob=dataURLtoBlob(d.data); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download=d.name; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url); }); }); } el.querySelector('#clear-files').addEventListener('click', ()=>{ Object.keys(localStorage).forEach(k=>{ if(k.startsWith('zim_file_')||k.startsWith('zim_doc_')) localStorage.removeItem(k); }); render(); }); const savedResume = localStorage.getItem('zim_resume'); if(savedResume){ const obj = JSON.parse(savedResume); localStorage.setItem('zim_doc_' + (obj.name||'resume'), JSON.stringify({name:(obj.name||'resume')+'.html',type:'resume',data:'data:text/html;base64,'+btoa('<h1>'+obj.name+'</h1>')})); } render(); return el; }
+navButtons.forEach((btn) => {
+  btn.addEventListener("click", () => {
+    const section = btn.dataset.section;
+    loadSection(section);
+  });
+});
 
-function signSection(){ const el=document.createElement('div'); el.innerHTML = `<div class="section-header"><h2>Sign</h2><div class="small">Create a signature to reuse in resumes and cards.</div></div><div style="display:flex;gap:12px"><div style="flex:1"><canvas id="sig-canvas" width="600" height="200" style="border:1px solid rgba(0,0,0,0.06);border-radius:8px;background:white"></canvas><div style="margin-top:8px"><button class="btn" id="save-sig">Save Signature</button><button id="clear-sig">Clear</button></div></div><div style="width:200px"><div class="preview-card" style="text-align:center"><div class="small">Saved signature preview</div><div id="sig-preview" style="margin-top:12px"></div></div></div></div>`; const canvas = el.querySelector('#sig-canvas'); const ctx = canvas.getContext('2d'); let drawing=false; canvas.addEventListener('pointerdown', (e)=>{drawing=true; ctx.beginPath(); ctx.moveTo(e.offsetX, e.offsetY);}); canvas.addEventListener('pointermove', (e)=>{ if(!drawing) return; ctx.lineWidth=2; ctx.lineCap='round'; ctx.strokeStyle='#111827'; ctx.lineTo(e.offsetX, e.offsetY); ctx.stroke(); }); canvas.addEventListener('pointerup', ()=> drawing=false); el.querySelector('#clear-sig').addEventListener('click', ()=> { ctx.clearRect(0,0,canvas.width,canvas.height); }); el.querySelector('#save-sig').addEventListener('click', ()=>{ const data = canvas.toDataURL(); localStorage.setItem('zim_signature', data); updatePreview(); alert('Signature saved locally.'); }); function updatePreview(){ const p = document.getElementById('sig-preview'); const data = localStorage.getItem('zim_signature'); p.innerHTML = data ? `<img src="${data}" width="160" />` : '<div class="small">No signature saved</div>'; } updatePreview(); return el; }
+// 🧱 Default view
+loadSection("home");
 
-function escapeHtml(s){ if(!s) return ''; return s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;'); }
-function dataURLtoBlob(dataurl){ const arr=dataurl.split(','); const mime=arr[0].match(/:(.*?);/)[1]; const bstr=atob(arr[1]); let n=bstr.length; const u8arr=new Uint8Array(n); for(let i=0;i<n;i++) u8arr[i]=bstr.charCodeAt(i); return new Blob([u8arr], {type:mime}); }
+// 🚀 Section Loader
+function loadSection(section) {
+  switch (section) {
+    case "home":
+      content.innerHTML = `
+        <h2>🏠 Welcome to ZimDocs-Pro</h2>
+        <p>Offline-ready productivity suite by <b>Legacy Technology</b>.</p>
+        <p>Use the left menu to start building your Resume, edit photos, or sign documents.</p>
+        <button id="backup-btn" class="btn">📤 Backup Data</button>
+        <button id="restore-btn" class="btn">📥 Restore Data</button>
+      `;
+      document.getElementById("backup-btn").onclick = backupData;
+      document.getElementById("restore-btn").onclick = restoreData;
+      break;
+
+    case "resume":
+      content.innerHTML = `
+        <h2>📄 Resume Builder</h2>
+        <textarea id="resume-text" placeholder="Write your resume here..." rows="14">${appData.resume || ""}</textarea>
+        <button class="btn" id="save-resume">💾 Save</button>
+      `;
+      document.getElementById("save-resume").onclick = () => {
+        appData.resume = document.getElementById("resume-text").value;
+        saveData();
+        showStatus("Resume saved ✅", "success");
+      };
+      break;
+
+    case "photo":
+      content.innerHTML = `
+        <h2>📸 Photo Tools</h2>
+        <div class="preview-photo">Upload photo feature coming soon...</div>
+      `;
+      break;
+
+    case "files":
+      content.innerHTML = `
+        <h2>📂 File Manager</h2>
+        <p>Coming soon — offline document viewer.</p>
+      `;
+      break;
+
+    case "sign":
+      content.innerHTML = `
+        <h2>✍️ Signature Pad</h2>
+        <canvas id="sign-pad" width="300" height="150" style="border:1px solid #ccc;border-radius:8px;background:white;"></canvas>
+        <div style="margin-top:10px;">
+          <button id="save-sign" class="btn">💾 Save</button>
+          <button id="clear-sign" class="btn">🧹 Clear</button>
+        </div>
+      `;
+      initSignaturePad();
+      break;
+
+    default:
+      content.innerHTML = `<h2>Section not found.</h2>`;
+  }
+}
+
+// 💾 Save all local data
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+}
+
+// 📤 Backup data (download JSON)
+function backupData() {
+  const blob = new Blob([JSON.stringify(appData, null, 2)], {
+    type: "application/json",
+  });
+  const link = document.createElement("a");
+  link.href = URL.createObjectURL(blob);
+  link.download = "zimdocs-backup.json";
+  link.click();
+  showStatus("Backup downloaded 💾", "success");
+}
+
+// 📥 Restore data (upload JSON)
+function restoreData() {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = "application/json";
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const data = JSON.parse(event.target.result);
+        appData = data;
+        saveData();
+        showStatus("Backup restored ✅", "success");
+        loadSection("home");
+      } catch {
+        showStatus("Invalid backup file ❌", "warning");
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+// 🖊 Signature pad system
+function initSignaturePad() {
+  const canvas = document.getElementById("sign-pad");
+  const ctx = canvas.getContext("2d");
+  let drawing = false;
+
+  const startDraw = (e) => {
+    drawing = true;
+    ctx.beginPath();
+    ctx.moveTo(
+      e.clientX - canvas.getBoundingClientRect().left,
+      e.clientY - canvas.getBoundingClientRect().top
+    );
+  };
+  const draw = (e) => {
+    if (!drawing) return;
+    ctx.lineTo(
+      e.clientX - canvas.getBoundingClientRect().left,
+      e.clientY - canvas.getBoundingClientRect().top
+    );
+    ctx.stroke();
+  };
+  const stopDraw = () => (drawing = false);
+
+  canvas.addEventListener("mousedown", startDraw);
+  canvas.addEventListener("mousemove", draw);
+  canvas.addEventListener("mouseup", stopDraw);
+  canvas.addEventListener("mouseleave", stopDraw);
+
+  document.getElementById("save-sign").onclick = () => {
+    appData.signature = canvas.toDataURL();
+    saveData();
+    showStatus("Signature saved 🖋️", "success");
+  };
+
+  document.getElementById("clear-sign").onclick = () => {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  };
+}
+
+// 🌙 Apply dark mode theme
+if (localStorage.getItem("theme") === "dark") {
+  document.body.classList.add("dark");
+}
