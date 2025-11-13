@@ -1,76 +1,53 @@
 {
-  "id": "/ZimDocs-Pro/",
-  "lang": "en",
-  "name": "ZimDocs-Pro — Legacy Technology Edition",
+  "name": "ZimDocs-Pro",
   "short_name": "ZimDocs",
-  "description": "Offline Resume & Document Builder with Photo, Files, and Signature tools — Made by Legacy Technology.",
+  "description": "Offline Resume, Photo, and Signature suite — works anywhere, anytime.",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "orientation": "portrait-primary",
-  "background_color": "#ffffff",
-  "theme_color": "#60a5fa",
-  "categories": [
-    "productivity",
-    "tools",
-    "education",
-    "utilities"
-  ],
+  "orientation": "portrait",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "categories": ["productivity", "utilities", "business"],
   "icons": [
-    {
-      "src": "icons/icon-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "icons/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icons/maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    }
+    { "src": "assets/icons/icon-48x48.png", "sizes": "48x48", "type": "image/png" },
+    { "src": "assets/icons/icon-72x72.png", "sizes": "72x72", "type": "image/png" },
+    { "src": "assets/icons/icon-96x96.png", "sizes": "96x96", "type": "image/png" },
+    { "src": "assets/icons/icon-144x144.png", "sizes": "144x144", "type": "image/png" },
+    { "src": "assets/icons/icon-192x192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-384x384.png", "sizes": "384x384", "type": "image/png" },
+    { "src": "assets/icons/icon-512x512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/maskable-icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "screenshots": [
+    { "src": "assets/screenshot1.png", "sizes": "800x600", "type": "image/png" },
+    { "src": "assets/screenshot2.png", "sizes": "800x600", "type": "image/png" }
   ],
   "shortcuts": [
     {
-      "name": "Create Resume",
+      "name": "Resume Builder",
       "short_name": "Resume",
-      "description": "Go to the Resume Builder section.",
       "url": "./index.html#resume",
-      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+      "description": "Quickly open Resume Builder.",
+      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
       "name": "Photo Tools",
       "short_name": "Photo",
-      "description": "Open the photo editing section.",
       "url": "./index.html#photo",
-      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+      "description": "Edit and crop ID photos offline.",
+      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
     },
     {
-      "name": "Sign Document",
+      "name": "Sign Tool",
       "short_name": "Sign",
-      "description": "Open signature capture tools.",
       "url": "./index.html#sign",
-      "icons": [{ "src": "icons/icon-192x192.png", "sizes": "192x192" }]
+      "description": "Create and save your signature.",
+      "icons": [{ "src": "assets/icons/icon-192x192.png", "sizes": "192x192" }]
     }
   ],
-  "screenshots": [
-    {
-      "src": "icons/screenshot1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "ZimDocs-Pro — Resume Builder"
-    },
-    {
-      "src": "icons/screenshot2.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "label": "ZimDocs-Pro — Photo & File Tools"
-    }
-  ]
+  "launch_handler": {
+    "client_mode": "auto"
+  },
+  "prefer_related_applications": false
 }
