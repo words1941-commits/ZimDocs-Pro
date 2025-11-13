@@ -1,34 +1,26 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>ZimDocs-Pro — Legacy Technology</title>
-
-  <!-- Theme and Colors -->
-  <meta name="theme-color" content="#60a5fa">
-  <meta name="background-color" content="#ffffff">
-
-  <!-- Manifest -->
-  <link rel="manifest" href="./manifest.json">
-
-  <!-- App Icons -->
-  <link rel="icon" href="./icons/icon-192x192.png" type="image/png">
-  <link rel="apple-touch-icon" href="./icons/icon-512x512.png">
-
-  <!-- Styles -->
-  <link rel="stylesheet" href="./css/styles.css">
+  <link rel="manifest" href="./manifest.json" />
+  <meta name="theme-color" content="#0f172a" />
+  <link rel="icon" href="./assets/icons/icon-192x192.png" />
+  <link href="css/style.css" rel="stylesheet" />
 </head>
 <body>
   <div id="app" class="app">
     <header class="card header">
       <div class="logo">
-        <img src="./icons/icon-192x192.png" alt="ZDPro" width="64" height="64"/>
+        <img src="assets/icons/icon-192x192.png" alt="ZDPro" width="64" height="64"/>
         <div class="title">
           <h1>ZimDocs-Pro</h1>
           <div class="subtitle">Legacy Technology Edition</div>
         </div>
       </div>
+      <button id="install-btn" class="btn">📲 Install App</button>
+      <button id="darkmode-toggle" class="btn">🌙 Dark Mode</button>
     </header>
 
     <main class="layout">
@@ -41,19 +33,38 @@
         <div class="footer-note">Made by Legacy Technology</div>
       </nav>
 
-      <section class="content card" id="content" tabindex="0">
-        <!-- dynamic content -->
-      </section>
+      <section class="content card" id="content" tabindex="0"></section>
     </main>
   </div>
 
-  <script type="module" src="./js/app.js"></script>
+  <script type="module" src="js/app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./service-worker.js')
-        .then(() => console.log('✅ Service Worker Registered'))
-        .catch(err => console.error('❌ Service Worker Error:', err));
+      navigator.serviceWorker.register('./service-worker.js');
     }
+
+    // Install prompt
+    let deferredPrompt;
+    const installBtn = document.getElementById('install-btn');
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = 'inline-block';
+    });
+    installBtn.addEventListener('click', async () => {
+      installBtn.style.display = 'none';
+      deferredPrompt.prompt();
+      await deferredPrompt.userChoice;
+      deferredPrompt = null;
+    });
+
+    // Dark mode toggle
+    const toggle = document.getElementById('darkmode-toggle');
+    toggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark');
+      localStorage.setItem('theme', document.body.classList.contains('dark') ? 'dark' : 'light');
+    });
+    if (localStorage.getItem('theme') === 'dark') document.body.classList.add('dark');
   </script>
 </body>
 </html>
